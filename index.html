@@ -20,50 +20,87 @@
       margin: 4px 2px;
     }
     .add {border-radius: 20%;}
+    .jarProgress {
+        background-color: #ededed;
+    }
+    .progress {
+      background-color: #c75b3a;  
+    }
 </style>
 </head>
 <body>
 
 <h1>Jar</h1>
 <div id="jarProgress">
-  <div id="progress"></div>
+    <div id="progress"></div>
+    <img class="jarimg" src="https://icon2.cleanpng.com/20180202/qhq/kisspng-glass-bottle-jar-transparency-and-translucency-glass-jar-5a752f14d22f57.0957134215176292048609.jpg">
 </div>
 <p>Amount Per Word: .25</p>
-<p>Current Amount:</p>
-<img class="left" src="https://icon2.cleanpng.com/20180202/qhq/kisspng-glass-bottle-jar-transparency-and-translucency-glass-jar-5a752f14d22f57.0957134215176292048609.jpg" onclick="addToJar()">
-<button class="button add">Add</button>
+<p id="curAmt"> Current Amount:</p>
+<button class="button add" onclick="add">Add</button>
 
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+<script type='text/javascript'>    
+  var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQmW4Uqas9IIYzh0c_9TO9vk8ElTuwlCSWEBBgs6bRUk_2aC-FroQJdHrs252eK_TzVnwtkBe8EUATD/pubhtml';
+
+    var amt = 0;    
+    function getAmt() {return amt;}
+    var max = 100;
     
-    <script>
-        var i = 0;
-    function move() {
-      if (i == 0) {
-            i = 1;
-            var elem = document.getElementById("progress");
-            var width = 1;
-            var id = setInterval(frame, 10);
-            function frame() {
-              if (width >= 100) {
-                clearInterval(id);
-                i = 0;
-              } else {
-                width++;
-                elem.style.width = width + "%";
-              }
-            }
-        }
+      function init() {
+        Tabletop.init( { key: publicSpreadsheetUrl,
+                         callback: showInfo,
+                         simpleSheet: true } )
+      }
+
+    var paraAmt= document.getElementById("curAmt");  
+    function updateAmount() {
+        paraAmt.textContent="Current Amount: "+getAmt();
     }
-        
-    </script>
-    <script>
-        function init() {
-            Tabletop.init( { key: ‘https://docs.google.com/spreadsheets/d/e/2PACX-1vQmW4Uqas9IIYzh0c_9TO9vk8ElTuwlCSWEBBgs6bRUk_2aC-FroQJdHrs252eK_TzVnwtkBe8EUATD/pubhtml',
-            callback: function(data, tabletop) {
-            console.log(data)
-            },
-            simpleSheet: true } )
-            }
-            window.addEventListener(‘DOMContentLoaded’, init)
-    </script>
+  
+      function showInfo(data, tabletop) {
+        alert('Successfully processed!')
+          paraAmt.textContent = "Current Amount: "+data[data.length][1];
+          amt = data[data.length][1];
+          //check the max
+          //amt should always be less than 80% of the max
+          while (amt > max*.8) { max = max*2;}
+        console.log(data);
+      }
+    //add .25 to the jar as Cylara
+    function addCylara() {
+        amt+=.25;
+        updateAmount();
+        drawJar();
+        appendToExcel(true);
+    }
+    //add .25 to the jar
+    function addLojo() {
+        amt+=.25;
+        updateAmount();
+        drawJar();
+        appendToExcel(false);
+    }
+    
+    appendToExcel(boolean isCylara) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.amt = getAmt();
+        script.isCylara = isCylara;
+        script.src = "https://script.google.com/macros/s/AKfycbz_kq3kUx1xf1KbPpr3MSbSJeUPBv0PTXoaOuGWfFxS8nW24F5k/exec"; 
+        document.getElementsByTagName("head")[0].appendChild(script);
+    }
+    
+    function drawJar() {
+        //move the jar's fullness
+        var elem = document.getElementById("progress");
+        var orgElem = document.getElementById("jarProgress")
+        var orgHeight = orgElem.style.height;
+        var height = amt/max*orgHeight;
+        elem.style.height = height;
+    }
+
+  window.addEventListener('DOMContentLoaded', init)
+</script>
 </body>
 </html>
