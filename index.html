@@ -22,23 +22,30 @@
     .add {border-radius: 20%;}
     .jarProgress {
         background-color: #ededed;
+        position: relative;
     }
     .progress {
-      background-color: #c75b3a;  
+        background-color: #c75b3a;
+        position: absolute;
+    }
+    .jarimg {
+        position: absolute;
     }
 </style>
 </head>
 <body>
 
 <h1>Jar</h1>
-<div id="jarProgress">
-    <div id="progress"></div>
-    <img class="jarimg" src="https://icon2.cleanpng.com/20180202/qhq/kisspng-glass-bottle-jar-transparency-and-translucency-glass-jar-5a752f14d22f57.0957134215176292048609.jpg">
+<div class="jarProgress">
+    <div class="progress"></div>
+    <img class="jarimg" src="https://i.pinimg.com/474x/eb/cb/bc/ebcbbc722efa2d88331d16b21d7c83ea.jpg">
 </div>
 <p>Amount Per Word: .25</p>
 <p id="curAmt"> Current Amount:</p>
-<button class="button add" onclick="add">Add</button>
-
+<div>
+    <button class="button add" onclick="addCylara">nacl</button>
+    <button class="button add" onclick="addLojo">lojo</button>
+</div>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
 <script type='text/javascript'>    
   var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQmW4Uqas9IIYzh0c_9TO9vk8ElTuwlCSWEBBgs6bRUk_2aC-FroQJdHrs252eK_TzVnwtkBe8EUATD/pubhtml';
